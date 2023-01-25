@@ -21,6 +21,7 @@ use Ramsey\Collection\Tool\ValueToStringTrait;
 use function array_combine;
 use function array_key_exists;
 use function is_int;
+use function var_export;
 
 /**
  * `NamedParameterMap` represents a mapping of values to a set of named keys

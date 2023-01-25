@@ -17,7 +17,7 @@ namespace Ramsey\Collection\Tool;
 use Ramsey\Collection\Exception\InvalidPropertyOrMethod;
 use Ramsey\Collection\Exception\UnsupportedOperationException;
 
-use function is_array;
+use function get_class;
 use function is_object;
 use function method_exists;
 use function property_exists;
@@ -44,7 +44,8 @@ trait ValueExtractorTrait
      * @throws InvalidPropertyOrMethod
      * @throws UnsupportedOperationException
      */
-    protected function extractValue(mixed $element, ?string $propertyOrMethod): mixed
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+    protected function extractValue($object, string $propertyOrMethod)
     {
         if ($propertyOrMethod === null) {
             return $element;
@@ -72,10 +73,9 @@ trait ValueExtractorTrait
             return $element->{$propertyOrMethod}();
         }
 
-        throw new InvalidPropertyOrMethod(sprintf(
-            'Method or property "%s" not defined in %s',
-            $propertyOrMethod,
-            $element::class,
-        ));
+        throw new ValueExtractionException(
+            // phpcs:ignore SlevomatCodingStandard.Classes.ModernClassNameReference.ClassNameReferencedViaFunctionCall
+            sprintf('Method or property "%s" not defined in %s', $propertyOrMethod, get_class($object)),
+        );
     }
 }

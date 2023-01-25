@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\TypedReference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\VarExporter\ProxyHelper;
 
@@ -153,21 +154,6 @@ class RegisterControllerArgumentLocatorsPass implements CompilerPassInterface
                     }
 
                     if (Request::class === $type || SessionInterface::class === $type || Response::class === $type) {
-                        continue;
-                    }
-
-                    if ($autowireAttributes) {
-                        $value = $autowireAttributes[0]->newInstance()->value;
-
-                        if ($value instanceof Reference) {
-                            $args[$p->name] = $type ? new TypedReference($value, $type, $invalidBehavior, $p->name) : new Reference($value, $invalidBehavior);
-                        } else {
-                            $args[$p->name] = new Reference('.value.'.$container->hash($value));
-                            $container->register((string) $args[$p->name], 'mixed')
-                                ->setFactory('current')
-                                ->addArgument([$value]);
-                        }
-
                         continue;
                     }
 
